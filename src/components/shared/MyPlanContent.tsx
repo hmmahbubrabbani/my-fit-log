@@ -184,12 +184,11 @@ export default function MyPlanContent() {
         ) : (
           <div className="text-center py-16 space-y-4 bg-base-200 rounded-3xl">
             <h3 className="text-2xl font-black uppercase">
-              {activeTab === "plan" ? "NOTHING HERE YET" : "NO SAVED WORKOUTS"}
+              NOTHING HERE YET
             </h3>
             <p className="text-base-content/70 font-medium">
-              {activeTab === "plan"
-                ? "Browse the library and add a lift to get today moving."
-                : "Save your favourite lifts for later planning."}
+             Browse the library and add a lift to get today moving.
+                
             </p>
             <Link href="/" className="btn bg-[#ccff00] text-black rounded-3xl font-bold border-none">
               Go to workouts
