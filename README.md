@@ -11,7 +11,7 @@
 * **State Management:** React Context API (`FitContext`) with persistent client state logic
 * **Notifications:** React Toastify for interactive feedback alerts
 * **Data Fetching:** Custom REST API integration (`https://api.abcz.workers.dev/api/fitlog`)
-* **Deployment Platforms:** Vercel / Netlify
+* **Deployment Platforms:** Vercel
 
 ---
 
