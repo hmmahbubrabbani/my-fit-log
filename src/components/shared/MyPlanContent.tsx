@@ -1,14 +1,27 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, Suspense } from "react";
 import { FitContext } from "@/context/FitContext";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { IWorkout } from "@/types/workout.type";
 
-export default function MyPlanContent() {
+function MyPlanInner() {
   const context = useContext(FitContext);
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
   const [sortBy, setSortBy] = useState<string>("default");
+
+  // URL-এ tab=saved থাকলে অটোমেটিক Saved ট্যাব সিলেক্ট করবে
+  useEffect(() => {
+    if (tabParam === "saved") {
+      setActiveTab("saved");
+    } else {
+      setActiveTab("plan");
+    }
+  }, [tabParam]);
 
   if (!context) return null;
   const { todaysPlan, savedList, removeFromTodaysPlan, removeFromSaved } = context;
@@ -17,7 +30,7 @@ export default function MyPlanContent() {
   const totalMinutes = todaysPlan.reduce((acc, item) => acc + item.duration, 0);
   const totalCalories = todaysPlan.reduce((acc, item) => acc + item.caloriesBurned, 0);
 
- 
+  // সর্টিং লজিক ফাংশন
   const sortWorkouts = (list: IWorkout[]) => {
     const listCopy = [...list];
     if (sortBy === "duration") {
@@ -34,7 +47,7 @@ export default function MyPlanContent() {
 
   return (
     <div>
-     
+      {/* Metrics Summary Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 stats shadow bg-slate-800 border border-slate-900">
         <div>
           <div className="stat">
@@ -56,14 +69,14 @@ export default function MyPlanContent() {
         </div>
       </div>
 
-      
+      {/* Tabs (Left) & Sort By (Right) Flex Container */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-        
+        {/* Left Side: Tabs */}
         <div className="tabs tabs-boxed bg-base-200 p-1">
           <button
             onClick={() => setActiveTab("plan")}
             className={`tab font-bold px-6 py-2 rounded-lg transition-all ${
-              activeTab === "plan" ? "text-slate-50 shadow" : ""
+              activeTab === "plan" ? "text-slate-900 bg-[#ccff00] shadow" : "text-base-content"
             }`}
           >
             Today&apos;s Plan
@@ -71,14 +84,14 @@ export default function MyPlanContent() {
           <button
             onClick={() => setActiveTab("saved")}
             className={`tab font-bold px-6 py-2 rounded-lg transition-all ${
-              activeTab === "saved" ? "text-slate-50 shadow" : ""
+              activeTab === "saved" ? "text-slate-900 bg-[#ccff00] shadow" : "text-base-content"
             }`}
           >
             Saved
           </button>
         </div>
 
-       
+        {/* Right Side: Sort By Field */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-base-content/70">Sort by:</span>
           <select
@@ -94,7 +107,7 @@ export default function MyPlanContent() {
         </div>
       </div>
 
-      
+      {/* List Content */}
       <div className="space-y-4">
         {displayedList.length > 0 ? (
           displayedList.map((workout) => (
@@ -109,48 +122,41 @@ export default function MyPlanContent() {
                 <div>
                   <h3 className="font-bold text-lg uppercase">{workout.name}</h3>
                   <p className="text-xs text-base-content/60 font-medium">Equipment: {workout.equipment}</p>
-                 <div className="flex gap-4 text-xs font-semibold mt-1 text-base-content/70 items-center">
-  
+                  <div className="flex gap-4 text-xs font-semibold mt-1 text-base-content/70 items-center">
                     <span className="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                         {workout.duration} min
+                      </svg>
+                      {workout.duration} min
                     </span>
 
- 
                     <span className="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {workout.caloriesBurned} kcal
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {workout.caloriesBurned} kcal
                     </span>
 
-  
                     <span className="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#ccff00]" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                        </svg>
-                        {workout.rating}
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#ccff00]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                      {workout.rating}
                     </span>
-                </div>
+                  </div>
                 </div>
               </div>
 
-             
+              {/* Action Buttons */}
               <div className="flex items-center gap-2 w-full md:w-auto justify-end">
                 <Link href={`/workouts/${workout.id}`} className="btn btn-sm btn-outline rounded-3xl">
                   View Details
                 </Link>
 
-                
                 {activeTab === "plan" && (
                   <button
-                    onClick={() => {
-                     
-                      removeFromTodaysPlan(workout.id);
-                    }}
+                    onClick={() => removeFromTodaysPlan(workout.id)}
                     className="btn btn-sm bg-[#ccff00] rounded-3xl hover:bg-[#b3e600] text-slate-900 border-none font-bold flex items-center gap-1"
                   >
                     <svg
@@ -167,14 +173,13 @@ export default function MyPlanContent() {
                   </button>
                 )}
 
-                
                 <button
                   onClick={() =>
                     activeTab === "plan"
                       ? removeFromTodaysPlan(workout.id)
                       : removeFromSaved(workout.id)
                   }
-                  className="btn btn-sm btn-outline text-white border-0 font-bold px-3"
+                  className="btn btn-sm btn-outline text-white border-0 font-bold px-3 hover:bg-slate-700"
                 >
                   ✕
                 </button>
@@ -184,11 +189,12 @@ export default function MyPlanContent() {
         ) : (
           <div className="text-center py-16 space-y-4 bg-base-200 rounded-3xl">
             <h3 className="text-2xl font-black uppercase">
-              NOTHING HERE YET
+              {activeTab === "plan" ? "NOTHING HERE YET" : "NO SAVED WORKOUTS"}
             </h3>
             <p className="text-base-content/70 font-medium">
-             Browse the library and add a lift to get today moving.
-                
+              {activeTab === "plan"
+                ? "Browse the library and add a lift to get today moving."
+                : "Save your favourite lifts for later planning."}
             </p>
             <Link href="/" className="btn bg-[#ccff00] text-black rounded-3xl font-bold border-none">
               Go to workouts
@@ -197,5 +203,13 @@ export default function MyPlanContent() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function MyPlanContent() {
+  return (
+    <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+      <MyPlanInner />
+    </Suspense>
   );
 }

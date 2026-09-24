@@ -28,6 +28,13 @@ export const FitProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addToTodaysPlan = (workout: IWorkout) => {
+    
+    if (todaysPlan.length >= 5) {
+      toast.error("Today's plan can only contain a maximum of 5 workouts!");
+      return;
+    }
+
+   
     if (!todaysPlan.some((item) => item.id === workout.id)) {
       setTodaysPlan([...todaysPlan, workout]);
       toast.success("Workout added to Today's Plan!");

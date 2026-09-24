@@ -16,7 +16,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar bg-base-100 shadow-xl container mx-auto px-4 py-5 border-b border-slate-700">
-     
+      {/* Left Side: Logo */}
       <div className="navbar-start">
         <Link href="/" className="flex items-center gap-2 text-2xl font-black tracking-wider uppercase">
           <Image
@@ -30,7 +30,7 @@ const Navbar = () => {
         </Link>
       </div>
 
-     
+      {/* Center: Navigation Links */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-4 font-medium">
           <li>
@@ -60,7 +60,7 @@ const Navbar = () => {
         </ul>
       </div>
 
-      
+      {/* Right Side: Badges */}
       <div className="navbar-end gap-3">
         <Link
           href="/my-plan"
@@ -72,8 +72,9 @@ const Navbar = () => {
           </span>
         </Link>
 
+        {/* Saved Button linked directly to Saved Tab */}
         <Link
-          href="/my-plan"
+          href="/my-plan?tab=saved"
           className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-base-300 font-semibold text-sm hover:bg-base-200 transition-all text-white"
         >
           <span>Saved:</span>
