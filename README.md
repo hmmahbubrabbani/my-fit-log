@@ -1,5 +1,6 @@
-# 🏋️‍♂️ FitLog — Modern Workout Library & Fitness Tracker
+## 🏋️‍♂️Project Name: my-fit-log — Modern Workout Library & Fitness Tracker
 
+## Short Description:
 **FitLog** is a feature-rich, responsive fitness-tracking dashboard and workout library web application built with **Next.js (App Router)**, **Tailwind CSS**, and **DaisyUI**. It empowers fitness enthusiasts to explore curated major muscle lifts, inspect comprehensive step-by-step instructions, organize personalized daily exercise routines with built-in capacity limits, and save favorites for future training sessions.
 
 ---
